@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Meow Solver" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <title>Meowdoku Solver</title>
+  <style>
+    :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#111827;background:#f3f4f6}
+    *{box-sizing:border-box}
+    body{margin:0;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);min-height:100vh}
+    header{padding:18px 18px 8px}
+    h1{font-size:26px;margin:0 0 6px}
+    .sub{color:#6b7280;font-size:14px;line-height:1.45}
+    main{padding:10px 14px 28px}
+    .card{background:#fff;border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    button,.filebtn,select,input[type=range]{font-size:16px}
+    button,.filebtn{border:0;border-radius:12px;padding:12px 14px;background:#111827;color:#fff;font-weight:650}
+    button.secondary{background:#e5e7eb;color:#111827}
+    button:disabled{opacity:.45}
+    input[type=file]{display:none}
+    select{padding:10px;border-radius:10px;border:1px solid #d1d5db;background:#fff}
+    canvas{display:block;width:100%;height:auto;border-radius:14px;background:#e5e7eb;touch-action:none}
+    .status{font-size:15px;line-height:1.5}
+    .ok{color:#047857}.err{color:#b91c1c}.muted{color:#6b7280}
+    label.small{font-size:13px;color:#4b5563}
+    .slider{display:grid;grid-template-columns:70px 1fr 48px;gap:8px;align-items:center}
+    .answer{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;word-break:break-word}
+    details summary{cursor:pointer;font-weight:650}
+    .tiny{font-size:12px;color:#6b7280}
+  </style>
+</head>
+<body>
+<header>
+  <h1>🐱 Meowdoku Solver</h1>
+  <div class="sub">iPhone Safari 版。選擇 Meowdoku 截圖 → 自動辨識顏色區域 → 求解 → 在圖片上標示貓的位置。</div>
+</header>
+<main>
+  <section class="card">
+    <div class="row">
+      <label class="filebtn" for="fileInput">選擇截圖</label>
+      <input id="fileInput" type="file" accept="image/*" />
+      <button id="solveBtn" disabled>自動解題</button>
+      <button id="saveBtn" class="secondary" disabled>另存答案圖</button>
+    </div>
+    <div style="height:10px"></div>
+    <div class="row">
+      <label>棋盤：</label>
+      <select id="sizeSelect">
+        <option value="auto">自動判斷</option>
+        <option>7</option><option>8</option><option>9</option><option>10</option>
+        <option>11</option><option>12</option><option>13</option><option>14</option>
+      </select>
+    </div>
+  </section>
+  <section class="card">
+    <canvas id="canvas"></canvas>
+    <div id="status" class="status muted" style="margin-top:10px">請先選擇遊戲截圖。</div>
+    <div id="answer" class="answer" style="margin-top:8px"></div>
+  </section>
+  <details class="card">
+    <summary>辨識失敗時：手動微調棋盤位置</summary>
+    <div style="height:10px"></div>
+    <div class="slider"><label class="small">左邊界</label><input id="leftRange" type="range" min="0" max="15" step=".1" value="5.5"><span id="leftVal">5.5%</span></div>
+    <div class="slider"><label class="small">上邊界</label><input id="topRange" type="range" min="15" max="40" step=".1" value="24.4"><span id="topVal">24.4%</span></div>
+    <div class="slider"><label class="small">寬度</label><input id="widthRange" type="range" min="75" max="98" step=".1" value="89.0"><span id="widthVal">89.0%</span></div>
+    <div class="tiny" style="margin-top:8px">若遊戲 UI 或手機比例不同，先讓方形棋盤框準確覆蓋彩色格子，再按「自動解題」。</div>
+  </details>
+  <section class="card">
+    <b>加入 iPhone 主畫面</b>
+    <div class="sub" style="margin-top:5px">Safari 開啟此網址 → 分享 →「加入主畫面」。</div>
+  </section>
+</main>
+<script src="./solver.js"></script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
